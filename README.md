@@ -35,6 +35,25 @@ OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profi
 - **APIs**: GitHub REST API v3 (fetched directly from browser)
 - **Deployment**: GitHub Pages
 
+## Architecture Overview
+
+BLT-OSSH (Open Source Sorting Hat) is a **recommendation engine** designed to help contributors discover open-source projects that match their skills and interests. It analyzes GitHub profiles and repository metadata to recommend projects where contributors can meaningfully participate.
+
+Within the **BLT (Bug Logging Tool) ecosystem**, OSSH acts as a **discovery layer** that helps users find relevant repositories, communities, and learning resources. It complements the main [BLT platform](https://github.com/OWASP-BLT/BLT) by focusing on contributor onboarding and project matching rather than bug reporting.
+
+### How It Works
+
+1. **User submits a GitHub username** — The user enters their GitHub handle on the OSSH homepage.
+2. **OSSH fetches and analyzes** — The frontend calls the GitHub API to retrieve user profile, repositories, languages, and topics.
+3. **Matching logic runs client-side** — The `buildRecommendations()` function in `js/app.js` analyzes repository languages, contribution patterns, and metadata to identify relevant projects.
+4. **Recommendations are displayed** — Results include recommended repositories, communities, articles, and discussion channels.
+
+### Key Architectural Decisions
+
+- **No backend** — All logic runs in the browser. GitHub API is called directly from the client.
+- **Static deployment** — Hosted on GitHub Pages with no server-side dependencies.
+- **GitHub Issues as database** — Community profiles are stored as GitHub Issues with the `profile` label, enabling moderation and editing without a database.
+
 ## How Profiles Work
 
 ### Simple & Direct
@@ -52,18 +71,55 @@ OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profi
 
 ## Getting Started
 
+## Local Development
+
+This section explains how contributors can run BLT-OSSH locally for development and testing.
+
 ### Prerequisites
-- A modern web browser (no server-side dependencies)
 
-### Local Development
-Open `index.html` directly in your browser, or serve it with any static file server:
+- **Python 3.x** or **Node.js 18+** — For running a local static file server
+- **Git** — For cloning the repository
+- **Modern web browser** — Chrome, Firefox, Safari, or Edge
 
+No environment variables or configuration files are required for basic local development. The app uses the public GitHub API without authentication.
+
+### Setup
+
+**1. Clone the repository**
 ```bash
-# Python built-in server
+git clone https://github.com/OWASP-BLT/BLT-OSSH.git
+cd BLT-OSSH
+```
+
+**2. Serve the application locally**
+
+Option A — Using Python (recommended):
+```bash
 python -m http.server 8000
 ```
 
-The application will be available at `http://localhost:8000`
+Option B — Using npm:
+```bash
+npm run dev
+```
+(This runs `python -m http.server 8000` under the hood)
+
+**3. Open in browser**
+
+Visit `http://localhost:8000` to load the main analysis page. Visit `http://localhost:8000/community.html` for the Community profiles page.
+
+### Configuration
+
+- **No `.env` or config files** — The app is fully static and requires no environment variables
+- **CORS** — GitHub API allows requests from any origin; no CORS configuration needed for local development
+
+### Testing Workflow
+
+1. Run the local server as above
+2. Enter a GitHub username and click "Find My Projects"
+3. Verify recommendations display correctly
+4. Test the "Create My Community Profile" flow (redirects to GitHub Issues)
+5. Open `community.html` and verify profile fetching works
 
 ### Deployment
 Pushes to the `main` branch automatically deploy to GitHub Pages via the workflow at `.github/workflows/deploy.yml`.
@@ -121,15 +177,36 @@ BLT-OSSH/
   - Social links and contact info
 - Real-time search and filtering
 
-## GitHub API
+## API Usage
 
-The site calls the GitHub REST API directly from the browser (no backend required):
+The system interacts with the **GitHub REST API** to retrieve user and repository data. All API calls are made directly from the browser (no backend required).
 
-- `GET https://api.github.com/users/{username}` — User profile data
-- `GET https://api.github.com/users/{username}/repos` — User repository list
-- `GET https://api.github.com/repos/{owner}/{repo}/issues?labels=profile&state=open` — Community profiles
+### Endpoints Used
 
-> **Note**: Unauthenticated requests are limited to 60 requests/hour per IP. This is sufficient for casual use.
+| Endpoint | Purpose |
+|----------|---------|
+| `GET https://api.github.com/users/{username}` | User profile data (name, bio, avatar, follower counts) |
+| `GET https://api.github.com/users/{username}/repos?sort=updated&per_page=100` | User repository list with languages and topics |
+| `GET https://api.github.com/repos/{owner}/{repo}/issues?labels=profile&state=open` | Community profiles (stored as GitHub Issues) |
+
+### Data Fetched
+
+- **User profile** — Avatar, bio, public repos count, followers, following
+- **Repositories** — Names, descriptions, languages, stars, fork status
+- **Languages used** — Extracted from repository metadata and weighted by frequency
+- **Community profiles** — Parsed from issue bodies on the Community page
+
+### Rate Limits
+
+- **Unauthenticated requests**: 60 requests/hour per IP address
+- **Authenticated requests**: 5,000 requests/hour (if you add a token — not required for basic use)
+- The app typically makes 2–3 requests per profile analysis, so casual use stays within limits
+- If rate limited, the app displays: *"GitHub API rate limit exceeded. Please wait a few minutes and try again."*
+
+### Authentication
+
+- **No authentication required** for basic usage — the app works with unauthenticated API calls
+- For higher rate limits or private repository access, you could add a GitHub token; this is not currently implemented in the static frontend
 
 ## Usage
 
@@ -154,7 +231,7 @@ The site calls the GitHub REST API directly from the browser (no backend require
    - Connect via GitHub, website, or social media
 
 ### For Contributors
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+See [Contribution Guidelines](#contribution-guidelines) for:
 - Adding new project recommendations
 - Improving the matching algorithm
 - Enhancing the UI/UX
@@ -206,14 +283,51 @@ After analyzing your GitHub profile, the system automatically pre-fills:
 - Skills extracted from your most-used languages
 - Looking for section with smart suggestions
 
-## Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
+## Contribution Guidelines
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Contributions are welcome! Follow these steps to contribute:
+
+### 1. Create a Branch
+
+```bash
+git checkout -b feature/your-feature-name
+```
+
+Use descriptive branch names: `feature/`, `fix/`, `docs/` prefixes help maintainers understand the change type.
+
+### 2. Make Your Changes
+
+- Edit files in `index.html`, `community.html`, `js/app.js`, or add new assets
+- Follow existing code style and formatting
+- Ensure the app works when served locally
+
+### 3. Run Tests Before Submitting
+
+```bash
+npm test
+```
+
+(Currently a placeholder; add tests as the project grows.)
+
+### 4. Open a Pull Request
+
+1. Push your branch: `git push origin feature/your-feature-name`
+2. Open a PR on GitHub against the `main` branch
+3. Provide a clear description of what changed and why
+4. Link any related issues if applicable
+
+### Code Style
+
+- **JavaScript**: Use consistent formatting; the project uses standard ES6+ syntax
+- **HTML**: Follow existing indentation and structure
+- **Markdown**: Use proper headers and formatting for documentation
+
+### What to Contribute
+
+- **New project recommendations** — Add or improve projects in the recommendation data
+- **Matching algorithm** — Improve `buildRecommendations()` in `js/app.js`
+- **UI/UX enhancements** — Accessibility, responsive design, dark mode
+- **Documentation** — README, ARCHITECTURE.md, or inline comments
 
 ## License
 This project is part of OWASP BLT and follows its licensing terms.
