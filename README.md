@@ -99,6 +99,7 @@ BLT-OSSH/
 3. System analyzes languages, topics, and contribution patterns
 4. Generates personalized recommendations
 5. Results displayed with stats, projects, communities, and resources
+6. Future AI suggestions — OSSH may later include an AI interface that asks follow-up questions to better understand user interests and recommend more relevant projects.
 
 ### 2. Community Profile Creation Flow
 1. User analyzes their GitHub profile
@@ -129,6 +130,7 @@ The site calls the GitHub REST API directly from the browser (no backend require
 
 - `GET https://api.github.com/users/{username}` — User profile data
 - `GET https://api.github.com/users/{username}/repos` — User repository list
+- `GET https://api.github.com/users/{username}/events/public?per_page=100` — Fetches recent public activity events used to estimate contributor activity patterns
 - `GET https://api.github.com/repos/{owner}/{repo}/issues?labels=profile&state=open` — Community profiles
 
 > **Note**: Unauthenticated requests are limited to 60 requests/hour per IP. This is sufficient for casual use.
