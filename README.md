@@ -164,52 +164,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
 - Enhancing the UI/UX
 - Adding new features
 
-## Features in Detail
-
-### Smart Matching Algorithm
-- Analyzes your repository languages and frequency
-- Considers your starred repos and topics
-- Matches you with trending and well-maintained projects
-- Weighs factors like activity, stars, and relevance
-
-### Community Features
-- **Profile Cards**: Rich cards with avatar, bio, skills, interests
-- **Experience Badges**: Visual indicators (Beginner, Intermediate, Advanced, Expert)
-- **Search & Filter**: Find developers by name, username, skills, or experience level
-- **Real-time Stats**: Community statistics (member count, languages, countries)
-- **Social Integration**: Connect via GitHub, website, Twitter, LinkedIn
-- **GitHub-Powered**: Uses GitHub Issues as database for profiles
-
-### Recommendation Categories
-- **Projects**: Open source repositories matching your tech stack
-- **Communities**: Developer communities and organizations
-- **Articles**: Learning resources and documentation
-- **Discussions**: Forums, Discord servers, and chat platforms
-
-## Community Profile Template
-
-Profiles are created as GitHub Issues using a structured template with these fields:
-
-- **GitHub Username** (required) - Your GitHub handle
-- **Display Name** (required) - How you want to be called
-- **Bio** (required) - Brief description about yourself
-- **Experience Level** (required) - Beginner, Intermediate, Advanced, or Expert
-- **Areas of Interest** (checkboxes) - Web Dev, Mobile, AI/ML, Security, DevOps, etc.
-- **Skills & Technologies** (required) - Comma-separated list (e.g., JavaScript, Python, React)
-- **Looking For** (required) - Your goals (e.g., "Mentorship in AI", "Open source collaborations")
-- **Location** (optional) - City, Country
-- **Website/Portfolio** (optional) - Your personal website
-- **Twitter** (optional) - Handle without @
-- **LinkedIn** (optional) - LinkedIn username
-
-### Pre-filled Profile Creation
-After analyzing your GitHub profile, the system automatically pre-fills:
-- Your GitHub username
-- Display name from your GitHub profile
-- Bio from GitHub (or primary language as fallback)
-- Skills extracted from your most-used languages
-- Looking for section with smart suggestions
-
 ## Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -228,21 +182,6 @@ This project is part of OWASP BLT and follows its licensing terms.
 - [Report Issues](https://github.com/OWASP-BLT/BLT-OSSH/issues)
 - [Create Your Profile](https://github.com/OWASP-BLT/BLT-OSSH/issues/new?template=user_profile.yml)
 - [Browse Community](./community.html)
-
-## Roadmap
-- [ ] AI-powered project recommendations using ML
-- [ ] Profile verification badges
-- [ ] Direct messaging between community members
-- [ ] Project collaboration matching
-- [ ] Mentorship program integration
-- [ ] Event calendar for community meetups
-- [ ] Skill endorsements
-- [ ] Advanced search with tags
-
-## Acknowledgments
-- OWASP Foundation
-- BLT Community
-- All contributors
 
 ---
 Made with ❤️ by the OWASP BLT Community
