@@ -2,7 +2,9 @@
 **Open Source Sorting Hat** - AI-powered GitHub profile analyzer that recommends perfect open source projects
 
 ## Overview
-OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profile and recommends personalized open source projects, communities, learning resources, and discussion channels based on your skills, interests, and activity.
+OSSH (Open Source Sorting Hat) is a tool that analyzes your GitHub profile and recommends personalized open source projects, communities, learning resources, and discussion channels based on your skills, interests, and activity.
+
+In addition to project matching, OSSH also suggests helpful resources such as blogs and educational pathways through the BLT University. The Open Source Sorting Hat also organizes contributors into four houses — Buggleton, Cybermoose, Bufferbit, and Darkram — helping build community and guide contributors through their open-source journey.
 
 ## Features
 
