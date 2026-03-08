@@ -1,5 +1,17 @@
 # BLT-OSSH 🎩✨
-**Open Source Sorting Hat** - AI-powered GitHub profile analyzer that recommends perfect open source projects
+
+**Open Source Sorting Hat** — AI-powered GitHub profile analyzer that recommends perfect open source projects for contributors.
+
+[![OWASP BLT](https://img.shields.io/badge/OWASP-BLT-blue)](https://github.com/OWASP-BLT/BLT) [![GitHub Pages](https://img.shields.io/badge/Live-Demo-green)](https://owasp-blt.github.io/BLT-OSSH/)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture-overview)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Contributing](#contributing)
 
 ## Overview
 OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profile and recommends personalized open source projects, communities, learning resources, and discussion channels based on your skills, interests, and activity.
@@ -69,8 +81,8 @@ Like the Sorting Hat, OSSH is designed to eventually sort contributors into four
 - **Experience Badges**: Visual indicators (Beginner, Intermediate, Advanced, Expert)
 - **Search & Filters**: Find developers by name, username, skills, or experience level
 - **Real-time Stats**: Community statistics (member count, languages, countries)
-- **Social Integrations**: Connect via Github, website, Twitter, LinkedIn
-- **Github-Powered**: Uses Github Issues as a database for profiles
+- **Social Integrations**: Connect via GitHub, website, Twitter, LinkedIn
+- **GitHub-Powered**: Uses GitHub Issues as a database for profiles
 
 ### Recommendation Categories
 
