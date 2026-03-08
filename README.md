@@ -67,16 +67,17 @@ Like the Sorting Hat, OSSH is designed to eventually sort contributors into four
 
 - **Profile Cards**: Rich cards with avatar, bio, skills, interests
 - **Experience Badges**: Visual indicators (Beginner, Intermediate, Advanced, Expert)
-- **Search & Filters**: Find developers by name, username, skills, or experience level
+- **Search & Filter**: Find developers by name, username, skills, or experience level
 - **Real-time Stats**: Community statistics (member count, languages, countries)
-- **Social Integrations**: Connect via GitHub, website, Twitter, LinkedIn
-- **GitHub-Powered**: Uses GitHub Issues as a database for profiles
+- **Social Integration**: Connect via GitHub, website, Twitter, LinkedIn
+- **GitHub-Powered**: Uses GitHub Issues as data source for profiles and projects
 
 ### Recommendation Categories
 
-- **Projects**: Open source repositories matching your tech stack
+- **Projects**: Open source repositories matching your skills and interests
 - **Communities**: Developer communities and organizations
 - **Articles**: Learning resources and documentation
+- **Discussions**: Forums, Discord servers, and other platforms
 
 ## How Profiles Work
 
@@ -216,14 +217,14 @@ The system interacts with the **GitHub REST API** to retrieve user and repositor
 Profiles are created as GitHub Issues using a structured template with these fields:
 
 - **GitHub Username** (required) - Your GitHub handle
-- **Display Name** (required) - How you want to be called
+- **Display Name** (required) - How you want to be known
 - **Bio** (required) - Brief description about yourself
 - **Experience Level** (required) - Beginner, Intermediate, Advanced, or Expert
-- **Areas of Interest** (checkboxes) - Web Dev, Mobile, AI/ML, Security, DevOps, etc.
-- **Skills & Technologies** (required) - Comma-separated list (e.g., JavaScript, Python, React)
-- **Looking For** (required) - Your goals (e.g., "Mentorship in AI", "Open source collaborations")
-- **Location** (optional) - City, Country
-- **Website/Portfolio** (optional) - Your personal website
+- **Areas of Interest** (checkboxes) - Web Dev, Mobile Dev, AI/ML, Cybersecurity, DevOps, etc.
+- **Skills & Technologies** (required) - Comma-separated list (e.g., Python, JavaScript, React)
+- **Looking For** (required) - Your goals (e.g., collaboration, mentorship)
+- **Location** (optional) - Your geographical location
+- **Website/Portfolio** (optional) - Your personal website or portfolio link
 - **Twitter** (optional) - Handle without @
 - **LinkedIn** (optional) - LinkedIn username
 
