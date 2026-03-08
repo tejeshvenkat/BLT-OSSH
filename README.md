@@ -1,17 +1,5 @@
 # BLT-OSSH 🎩✨
-
-**Open Source Sorting Hat** — AI-powered GitHub profile analyzer that recommends perfect open source projects for contributors.
-
-[![OWASP BLT](https://img.shields.io/badge/OWASP-BLT-blue)](https://github.com/OWASP-BLT/BLT) [![GitHub Pages](https://img.shields.io/badge/Live-Demo-green)](https://owasp-blt.github.io/BLT-OSSH/)
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture-overview)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Contributing](#contributing)
+**Open Source Sorting Hat** - AI-powered GitHub profile analyzer that recommends perfect open source projects
 
 ## Overview
 OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profile and recommends personalized open source projects, communities, learning resources, and discussion channels based on your skills, interests, and activity.
@@ -49,7 +37,7 @@ OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profi
 
 ## Architecture Overview
 
-BLT-OSSH (Open Source Sorting Hat) helps contributors discover open-source projects that match their skills and interests by analyzing GitHub profiles and repository metadata. It goes beyond project matching to suggest information such as blogs, educational pathways, and integration with **BLT University** (educational resources for contributors).
+BLT-OSSH (Open Source Sorting Hat) helps contributors discover open-source projects that match their skills and interests by analyzing GitHub profiles and repository metadata. It goes beyond project matching to suggest information such as blogs and educational pathways integrating with **BLT University**.
 
 Within the **BLT (Bug Logging Tool) ecosystem**, OSSH acts as a **discovery layer** that helps users find relevant repositories, communities, and learning resources. It complements the main [BLT platform](https://github.com/OWASP-BLT/BLT) by focusing on contributor onboarding and project matching rather than bug reporting.
 
@@ -89,7 +77,6 @@ Like the Sorting Hat, OSSH is designed to eventually sort contributors into four
 - **Projects**: Open source repositories matching your tech stack
 - **Communities**: Developer communities and organizations
 - **Articles**: Learning resources and documentation
-- **Discussions**: Forums, Discord servers, and chat platforms
 
 ## How Profiles Work
 
@@ -239,46 +226,6 @@ Profiles are created as GitHub Issues using a structured template with these fie
 - **Website/Portfolio** (optional) - Your personal website
 - **Twitter** (optional) - Handle without @
 - **LinkedIn** (optional) - LinkedIn username
-
-### Pre-filled Profile Creation
-
-After analyzing your GitHub profile, the system automatically pre-fills:
-- Your GitHub username
-- Display name from your GitHub profile
-- Bio from GitHub (or primary language as fallback)
-- Skills extracted from your most-used languages
-- Looking for section with smart suggestions
-
-## Usage
-
-### For Users
-
-1. **Analyze Your Profile**
-   - Visit OSSH homepage
-   - Enter your GitHub username
-   - Click "Find My Projects"
-   - Explore personalized recommendations
-
-2. **Join the Community**
-   - After analysis, click "Create My Community Profile"
-   - Review pre-filled data (username, bio, skills)
-   - Add additional information (interests, looking for, social links)
-   - Submit to create your profile
-
-3. **Discover Developers**
-   - Visit the Community page
-   - Browse developer profiles
-   - Filter by experience level
-   - Search by name, skills, or location
-   - Connect via GitHub, website, or social media
-
-### For Contributors
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
-- Adding new project recommendations
-- Improving the matching algorithm
-- Enhancing the UI/UX
-- Adding new features
 
 ## Contributing
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding project recommendations, improving the matching algorithm, and more.
