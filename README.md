@@ -37,7 +37,7 @@ OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profi
 
 ## Architecture Overview
 
-BLT-OSSH (Open Source Sorting Hat) helps contributors discover open-source projects that match their skills and interests by analyzing GitHub profiles and repository metadata. It goes beyond project matching to suggest information such as blogs and educational pathways integrating with **BLT University**.
+BLT-OSSH (Open Source Sorting Hat) helps contributors discover open-source projects that match their skills and interests by analyzing GitHub profiles and repository metadata. It goes beyond project matching to suggest information such as blogs, educational pathways, and integration with **BLT University** (educational resources for contributors).
 
 Within the **BLT (Bug Logging Tool) ecosystem**, OSSH acts as a **discovery layer** that helps users find relevant repositories, communities, and learning resources. It complements the main [BLT platform](https://github.com/OWASP-BLT/BLT) by focusing on contributor onboarding and project matching rather than bug reporting.
 
@@ -203,13 +203,23 @@ The system interacts with the **GitHub REST API** to retrieve user and repositor
 |----------|---------|
 | `GET https://api.github.com/users/{username}` | User profile data (name, bio, avatar, follower counts) |
 | `GET https://api.github.com/users/{username}/repos?sort=updated&per_page=100` | User repository list with languages and topics |
-| `data/profiles.json` | Community profiles (static file; workflow populates it from GitHub Issues API) |
+| `GET https://api.github.com/users/{username}/events/public?per_page=100` | Recent public events used to calculate the contributor activity score |
+| `GET https://api.github.com/repos/{owner}/{repo}/issues?labels=profile&state=open` | Community profiles (used by workflow) |
+| `data/profiles.json` | Community profiles (static file; workflow populates it from GitHub Issues) |
+
+### Data Fetched
+
+- **User profile** — Avatar, bio, public repos count, followers, following
+- **Repositories** — Names, descriptions, languages, stars, fork status
+- **Languages used** — Extracted from repository metadata and weighted by frequency
+- **Public events** — Recent PushEvent, PullRequestEvent, and IssuesEvent counts used for activity scoring (see `js/app.js`, `activity_score`, `activity_breakdown`)
+- **Community profiles** — Parsed from issue bodies on the Community page (or from `data/profiles.json`)
 
 ### Rate Limits
 
 - **Unauthenticated requests**: 60 requests/hour per IP address
 - **Authenticated requests**: 5,000 requests/hour (if you add a token — not required for basic use)
-- The app typically makes 2–3 requests per profile analysis, so casual use stays within limits
+- The app typically makes 2–4 requests per profile analysis (profile, repos, optionally events), so casual use stays within limits
 - If rate limited, the app displays: *"GitHub API rate limit exceeded. Please wait a few minutes and try again."*
 
 ## Community Profile Template
@@ -227,6 +237,46 @@ Profiles are created as GitHub Issues using a structured template with these fie
 - **Website/Portfolio** (optional) - Your personal website or portfolio link
 - **Twitter** (optional) - Handle without @
 - **LinkedIn** (optional) - LinkedIn username
+
+### Pre-filled Profile Creation
+
+After analyzing your GitHub profile, the system automatically pre-fills:
+- Your GitHub username
+- Display name from your GitHub profile
+- Bio from GitHub (or primary language as fallback)
+- Skills extracted from your most-used languages
+- Looking for section with smart suggestions
+
+## Usage
+
+### For Users
+
+1. **Analyze Your Profile**
+   - Visit OSSH homepage
+   - Enter your GitHub username
+   - Click "Find My Projects"
+   - Explore personalized recommendations
+
+2. **Join the Community**
+   - After analysis, click "Create My Community Profile"
+   - Review pre-filled data (username, bio, skills)
+   - Add additional information (interests, looking for, social links)
+   - Submit to create your profile
+
+3. **Discover Developers**
+   - Visit the Community page
+   - Browse developer profiles
+   - Filter by experience level
+   - Search by name, skills, or location
+   - Connect via GitHub, website, or social media
+
+### For Contributors
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+- Adding new project recommendations
+- Improving the matching algorithm
+- Enhancing the UI/UX
+- Adding new features
 
 ## Contributing
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding project recommendations, improving the matching algorithm, and more.
