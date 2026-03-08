@@ -59,9 +59,9 @@ Like the Sorting Hat, OSSH is designed to eventually sort contributors into four
 ### Smart Hatching Algorithm
 
 - Analyzes your repository languages and frequency
-- Considers your starred repos and topics
+- Considers repository metadata (languages, descriptions, topics)
 - Matches you with trending and well-maintained projects
-- Weights factors like activity, stars, and relevance
+- Weighs factors like activity, stars, and relevance
 
 ### Community Features
 
@@ -184,8 +184,8 @@ BLT-OSSH/
 7. Profile appears on Community page immediately (after workflow syncs `data/profiles.json`)
 
 ### 3. Profile Discovery
-- Community page fetches all open issues with `profile` label
-- Parses issue body to extract profile information
+- Workflow fetches open issues with `profile` label and generates `data/profiles.json`
+- Community page loads profiles from `data/profiles.json`
 - Displays profiles with rich cards showing:
   - Experience level badge
   - Skills and interests
@@ -202,24 +202,22 @@ The system interacts with the **GitHub REST API** to retrieve user and repositor
 | Endpoint | Purpose |
 |----------|---------|
 | `GET https://api.github.com/users/{username}` | User profile data (name, bio, avatar, follower counts) |
-| `GET https://api.github.com/users/{username}/repos?sort=updated&per_page=100` | User repository list with languages and topics |
-| `GET https://api.github.com/users/{username}/events/public?per_page=100` | Recent public events used to calculate the contributor activity score |
-| `GET https://api.github.com/repos/{owner}/{repo}/issues?labels=profile&state=open` | Community profiles (used by workflow) |
-| `data/profiles.json` | Community profiles (static file; workflow populates it from GitHub Issues) |
+| `GET https://api.github.com/users/{username}/repos?sort=updated&per_page=100` | User repository list with languages and metadata |
+| `GET https://api.github.com/repos/{owner}/{repo}/issues?labels=profile&state=open` | Community profiles (used by workflow to generate `data/profiles.json`) |
+| `data/profiles.json` | Community profiles (static file; Community page loads this) |
 
 ### Data Fetched
 
 - **User profile** — Avatar, bio, public repos count, followers, following
 - **Repositories** — Names, descriptions, languages, stars, fork status
 - **Languages used** — Extracted from repository metadata and weighted by frequency
-- **Public events** — Recent PushEvent, PullRequestEvent, and IssuesEvent counts used for activity scoring (see `js/app.js`, `activity_score`, `activity_breakdown`)
-- **Community profiles** — Parsed from issue bodies on the Community page (or from `data/profiles.json`)
+- **Community profiles** — Loaded from `data/profiles.json` (workflow populates it from GitHub Issues)
 
 ### Rate Limits
 
 - **Unauthenticated requests**: 60 requests/hour per IP address
 - **Authenticated requests**: 5,000 requests/hour (if you add a token — not required for basic use)
-- The app typically makes 2–4 requests per profile analysis (profile, repos, optionally events), so casual use stays within limits
+- The app typically makes 2 requests per profile analysis (profile, repos), so casual use stays within limits
 - If rate limited, the app displays: *"GitHub API rate limit exceeded. Please wait a few minutes and try again."*
 
 ## Community Profile Template
