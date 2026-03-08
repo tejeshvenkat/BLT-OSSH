@@ -91,6 +91,63 @@ form.addEventListener('submit', async (e) => {
     }
 });
 
+function assignHouse(userData, repos, languages) {
+    const HOUSES = {
+        buggleton: {
+            name: 'Buggleton',
+            icon: '🐛',
+            desc: 'Bug hunters & QA champions',
+            color: 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700',
+            languages: ['Python', 'JavaScript', 'TypeScript', 'Java'],
+            keywords: ['bug', 'test', 'qa', 'selenium', 'cypress', 'jest', 'pytest', 'mocha', 'testing', 'quality']
+        },
+        cybermoose: {
+            name: 'Cybermoose',
+            icon: '🛡️',
+            desc: 'Security & cybersecurity experts',
+            color: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700',
+            languages: ['Python', 'C', 'Go', 'Rust', 'JavaScript'],
+            keywords: ['security', 'pentest', 'exploit', 'vuln', 'owasp', 'hack', 'crypto', 'encrypt', 'auth', 'xss', 'sqli']
+        },
+        bufferbit: {
+            name: 'Bufferbit',
+            icon: '⚙️',
+            desc: 'Infrastructure & DevOps builders',
+            color: 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-700',
+            languages: ['Shell', 'Python', 'Go', 'HCL', 'YAML', 'Dockerfile'],
+            keywords: ['docker', 'kubernetes', 'terraform', 'ansible', 'ci', 'devops', 'infra', 'deploy', 'pipeline', 'cloud']
+        },
+        darkram: {
+            name: 'Darkram',
+            icon: '⚡',
+            desc: 'Backend & systems engineers',
+            color: 'bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-300 border-violet-300 dark:border-violet-700',
+            languages: ['C', 'C++', 'Rust', 'Go', 'Python', 'Java'],
+            keywords: ['backend', 'system', 'kernel', 'embedded', 'compiler', 'database', 'api', 'server', 'performance']
+        }
+    };
+
+    const scores = { buggleton: 0, cybermoose: 0, bufferbit: 0, darkram: 0 };
+    const text = [
+        (userData.bio || '').toLowerCase(),
+        ...repos.map(r => [r.name, r.description, r.full_name].filter(Boolean).join(' ').toLowerCase())
+    ].join(' ');
+
+    Object.keys(HOUSES).forEach(houseId => {
+        const house = HOUSES[houseId];
+        house.languages.forEach(lang => {
+            if (languages.includes(lang)) scores[houseId] += 3;
+        });
+        house.keywords.forEach(kw => {
+            if (text.includes(kw)) scores[houseId] += 2;
+        });
+    });
+
+    const winner = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
+    const house = HOUSES[winner[0]];
+    return { id: winner[0], ...house, score: winner[1] };
+}
+
 function buildRecommendations(userData, repos) {
     // Extract languages from repos (weighted by frequency)
     const languageCounts = {};
@@ -102,6 +159,8 @@ function buildRecommendations(userData, repos) {
     const languages = Object.keys(languageCounts)
         .sort((a, b) => languageCounts[b] - languageCounts[a])
         .slice(0, 10);
+
+    const house = assignHouse(userData, repos, languages);
 
     const github_stats = {
         username: userData.login,
@@ -183,6 +242,7 @@ function buildRecommendations(userData, repos) {
 
     return {
         github_stats,
+        house,
         recommended_repos,
         recommended_communities,
         recommended_articles,
@@ -212,6 +272,18 @@ function displayResults(data) {
     document.getElementById('user-avatar').src = githubStats.avatar_url || 'static/logo.png';
     document.getElementById('user-name').textContent = githubStats.name || githubStats.username;
     document.getElementById('user-bio').textContent = githubStats.bio || 'No bio available';
+
+    // Display House Badge
+    const houseBadge = document.getElementById('house-badge');
+    if (houseBadge && data.house) {
+        houseBadge.className = `inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold border ${data.house.color}`;
+        houseBadge.title = data.house.desc;
+        document.getElementById('house-icon').textContent = data.house.icon;
+        document.getElementById('house-name').textContent = data.house.name;
+        houseBadge.classList.remove('hidden');
+    } else if (houseBadge) {
+        houseBadge.classList.add('hidden');
+    }
     document.getElementById('user-repos').textContent = githubStats.public_repos || 0;
     document.getElementById('user-followers').textContent = githubStats.followers || 0;
     document.getElementById('user-following').textContent = githubStats.following || 0;

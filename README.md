@@ -17,6 +17,13 @@ OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profi
 - **Smart Profile Creation** - After analyzing your GitHub, create a community profile with pre-filled data
 - **Filter & Search** - Find developers by experience level, skills, or location
 
+### 🎩 Four Houses Assignment
+- **Buggleton** 🐛 — Bug hunters & QA champions
+- **Cybermoose** 🛡️ — Security & cybersecurity experts
+- **Bufferbit** ⚙️ — Infrastructure & DevOps builders
+- **Darkram** ⚡ — Backend & systems engineers
+- OSSH analyzes your repos, languages, and interests to sort you into your house
+
 ### 🎯 Personalized Recommendations
 - Open source projects matching your tech stack
 - Developer communities and organizations
