@@ -269,7 +269,7 @@ function showError(message) {
 }
 
 function hideError() {
-    errorMessage.classList.add('hidden');
+    if (errorMessage) errorMessage.classList.add('hidden');
 }
 
 function displayResults(data) {
@@ -429,17 +429,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const analyzeAnotherBtn = document.getElementById('analyze-another');
     if (analyzeAnotherBtn) {
         analyzeAnotherBtn.addEventListener('click', () => {
-            // Hide results
-            document.getElementById('results-section').classList.add('hidden');
+            const resultsSection = document.getElementById('results-section');
+            const featuresGrid = document.querySelector('.grid.gap-6.md\\:grid-cols-3.mb-12');
+            const formCard = document.querySelector('.surface-card.rounded-2xl.p-8.sm\\:p-10');
 
-            // Show form and features
-            document.querySelector('.grid.gap-6.md\\:grid-cols-3.mb-12').classList.remove('hidden');
-            document.querySelector('.surface-card.rounded-2xl.p-8.sm\\:p-10').classList.remove('hidden');
+            if (resultsSection) resultsSection.classList.add('hidden');
+            if (featuresGrid) featuresGrid.classList.remove('hidden');
+            if (formCard) formCard.classList.remove('hidden');
 
-            // Clear form
-            usernameInput.value = '';
+            if (usernameInput) usernameInput.value = '';
 
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }

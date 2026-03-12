@@ -5,17 +5,19 @@ echo ========================================
 echo   OSSH - Open Source Sorting Hat
 echo ========================================
 echo.
-echo Starting server... Your browser will open.
+python -c "exit(0)" 2>nul
+if errorlevel 1 (
+    echo ERROR: Python not found. Install from python.org
+    pause
+    exit /b 1
+)
+echo Starting server... Your browser will open shortly.
 echo.
 echo KEEP THIS WINDOW OPEN while using the app.
-echo Close this window when done.
 echo.
-timeout /t 2 /nobreak >nul
+start /b python -m http.server 8000
+timeout /t 3 /nobreak >nul
 start http://localhost:8000
-python -m http.server 8000
-if errorlevel 1 (
-    echo.
-    echo ERROR: Python not found. Install Python from python.org
-    echo Or install Live Server extension in Cursor.
-    pause
-)
+echo.
+echo Server running. Press any key to stop...
+pause >nul
