@@ -9,11 +9,13 @@ if (currentTheme === 'dark') {
     html.classList.add('dark');
 }
 
+if (darkToggle) {
 darkToggle.addEventListener('click', () => {
     html.classList.toggle('dark');
     const theme = html.classList.contains('dark') ? 'dark' : 'light';
     localStorage.setItem('theme', theme);
 });
+}
 
 // Form submission
 const form = document.getElementById('ossh-form');
@@ -24,7 +26,7 @@ const errorMessage = document.getElementById('error-message');
 const errorText = document.getElementById('error-text');
 const usernameInput = document.getElementById('github-username');
 
-if (!window.OSSH_SKIP_APP_FORM) {
+if (!window.OSSH_SKIP_APP_FORM && form) {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -259,8 +261,11 @@ function buildRecommendations(userData, repos) {
 }
 
 function showError(message) {
-    errorText.textContent = message;
-    errorMessage.classList.remove('hidden');
+    if (errorText) errorText.textContent = message;
+    if (errorMessage) {
+        errorMessage.classList.remove('hidden');
+        errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 }
 
 function hideError() {
@@ -395,13 +400,18 @@ function displayResults(data) {
     // Update GitHub profile link
     document.getElementById('view-github-profile').href = `https://github.com/${encodeURIComponent(githubStats.username)}`;
 
+    // Setup create profile button
+    setupCreateProfileButton(data);
+
     // Show results section and scroll to it
     resultsSection.classList.remove('hidden');
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Hide features section
-    document.querySelector('.grid.gap-6.md\\:grid-cols-3.mb-12').classList.add('hidden');
-    document.querySelector('.surface-card.rounded-2xl.p-8.sm\\:p-10').classList.add('hidden');
+    const featuresGrid = document.querySelector('.grid.gap-6.md\\:grid-cols-3.mb-12');
+    const formCard = document.querySelector('.surface-card.rounded-2xl.p-8.sm\\:p-10');
+    if (featuresGrid) featuresGrid.classList.add('hidden');
+    if (formCard) formCard.classList.add('hidden');
 }
 
 function escapeHtml(str) {
@@ -435,37 +445,111 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Create profile button handler
-    const createProfileBtn = document.getElementById('create-profile-btn');
-    if (createProfileBtn) {
-        createProfileBtn.addEventListener('click', () => {
-            if (window.currentUserData) {
-                const profileUrl = buildProfileIssueUrl(window.currentUserData);
-                window.open(profileUrl, '_blank');
-            }
-        });
-    }
 });
+
+function setupCreateProfileButton(data) {
+    const createProfileBtn = document.getElementById('create-profile-btn');
+    if (!createProfileBtn) return;
+
+    const newBtn = createProfileBtn.cloneNode(true);
+    createProfileBtn.parentNode.replaceChild(newBtn, createProfileBtn);
+
+    newBtn.addEventListener('click', () => {
+        const profileUrl = buildProfileIssueUrl(data);
+        window.open(profileUrl, '_blank');
+    });
+}
 
 function buildProfileIssueUrl(data) {
     const githubStats = data.github_stats;
-
-    // Build the issue URL with pre-filled data
     const baseUrl = 'https://github.com/OWASP-BLT/BLT-OSSH/issues/new';
-    const template = 'user_profile.yml';
 
-    // Create URL parameters
+    const skills = githubStats.languages.slice(0, 10).join(', ');
+    const topLanguages = githubStats.languages.slice(0, 3).join(', ');
+    const lookingFor = `Looking to contribute to open source projects in ${topLanguages}. Interested in ${data.recommended_communities.map(c => c.name).join(', ')}.`;
+
+    const recommendedProjects = data.recommended_repos
+        .slice(0, 5)
+        .map(r => `- [${r.name}](${r.url}) ⭐ ${r.stars} - ${r.description}`)
+        .join('\n');
+
+    const recommendedCommunities = data.recommended_communities
+        .map(c => `- [${c.name}](${c.url}) - ${c.description} (${c.members} members)`)
+        .join('\n');
+
+    const recommendedArticles = data.recommended_articles
+        .map(a => `- [${a.title}](${a.url}) - ${a.category}`)
+        .join('\n');
+
+    const bodyContent = `# 🎯 OSSH Analysis Summary
+
+> **Profile analyzed on:** ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+
+## 📊 GitHub Stats
+- **Your House:** ${data.house ? `${data.house.icon} ${data.house.name} — ${data.house.desc}` : '—'}
+- **Username:** [@${githubStats.username}](https://github.com/${githubStats.username})
+- **Name:** ${githubStats.name || githubStats.username}
+- **Bio:** ${githubStats.bio || 'No bio provided'}
+- **Repositories:** ${githubStats.public_repos}
+- **Followers:** ${githubStats.followers}
+- **Following:** ${githubStats.following}
+- **Top Languages:** ${githubStats.languages.slice(0, 5).join(', ')}
+
+## 🌟 Your Top Recommended Projects
+${recommendedProjects}
+
+## 👥 Recommended Communities to Join
+${recommendedCommunities}
+
+## 📚 Recommended Articles for You
+${recommendedArticles}
+
+## 💬 Discussion Channels
+${data.recommended_discussion_channels.map(ch => `- [${ch.name}](${ch.url}) - ${ch.platform}`).join('\n')}
+
+---
+
+**🤖 Generated by:** [OSSH - Open Source Sorting Hat](https://github.com/OWASP-BLT/BLT-OSSH)
+
+**✏️ Note:** The information above has been automatically populated based on your GitHub profile analysis. Please review and edit the profile fields below before submitting.`;
+
+    const recommendedProjectsDisplay = data.recommended_repos
+        .slice(0, 6)
+        .map(r => `**${r.name}** ⭐ ${r.stars}\n${r.description}\n🔗 [View](${r.url})`)
+        .join('\n\n');
+
+    const recommendedCommunitiesDisplay = data.recommended_communities
+        .map(c => `**${c.name}** (${c.members} members)\n${c.description}\n🔗 [Visit](${c.url})`)
+        .join('\n\n');
+
+    const recommendedArticlesDisplay = data.recommended_articles
+        .map(a => `**${a.title}** - ${a.category}\n🔗 [Read](${a.url})`)
+        .join('\n\n');
+
     const params = new URLSearchParams({
-        template: template,
+        template: 'user_profile.yml',
         title: `[PROFILE] ${githubStats.name || githubStats.username}`,
+        labels: 'profile',
         'github_username': githubStats.username,
         'display_name': githubStats.name || githubStats.username,
-        'bio': githubStats.bio || `Open source developer passionate about ${githubStats.languages.slice(0, 3).join(', ')}`,
-        'skills': githubStats.languages.join(', '),
-        'looking_for': 'Looking to contribute to open source projects and connect with other developers'
+        'bio': githubStats.bio || `Open source developer passionate about ${topLanguages}`,
+        'skills': skills,
+        'looking_for': lookingFor,
+        'recommended_projects': recommendedProjectsDisplay,
+        'recommended_communities': recommendedCommunitiesDisplay,
+        'recommended_reading': recommendedArticlesDisplay,
     });
 
+    params.append('body', bodyContent);
     return `${baseUrl}?${params.toString()}`;
 }
+
+// Expose for index.html inline script
+window.buildRecommendations = buildRecommendations;
+window.displayResults = displayResults;
+window.showError = showError;
+window.hideError = hideError;
+window.escapeHtml = escapeHtml;
 
 // Set footer year
 document.getElementById('footer-year').textContent = new Date().getFullYear();

@@ -24,8 +24,6 @@ OSSH (Open Source Sorting Hat) is a magical tool that analyzes your GitHub profi
 - **Darkram** ⚡ — Backend & systems engineers
 - OSSH analyzes your repos, languages, and interests to sort you into your house
 
-![Four Houses Demo](docs/four-houses-demo.png)
-
 ### 🎯 Personalized Recommendations
 - Open source projects matching your tech stack
 - Developer communities and organizations
