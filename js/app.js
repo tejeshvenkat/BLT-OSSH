@@ -24,6 +24,7 @@ const errorMessage = document.getElementById('error-message');
 const errorText = document.getElementById('error-text');
 const usernameInput = document.getElementById('github-username');
 
+if (!window.OSSH_SKIP_APP_FORM) {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -90,6 +91,7 @@ form.addEventListener('submit', async (e) => {
         loadingSpinner.classList.add('hidden');
     }
 });
+}
 
 function assignHouse(userData, repos, languages) {
     const HOUSES = {
