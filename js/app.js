@@ -95,6 +95,13 @@ form.addEventListener('submit', async (e) => {
 });
 }
 
+/**
+ * Assigns a user to one of four houses based on repo languages and keywords.
+ * @param {Object} userData - GitHub user profile data
+ * @param {Array} repos - User's repositories
+ * @param {string[]} languages - Top languages from repos
+ * @returns {Object} House object with id, name, icon, desc, color, score
+ */
 function assignHouse(userData, repos, languages) {
     const HOUSES = {
         buggleton: {
@@ -158,6 +165,12 @@ function assignHouse(userData, repos, languages) {
     return { id: winner[0], ...house, score: winner[1] };
 }
 
+/**
+ * Builds recommendation data from GitHub profile and repos.
+ * @param {Object} userData - GitHub user profile
+ * @param {Array} repos - User's repositories
+ * @returns {Object} Recommendations with github_stats, house, repos, communities, articles, channels
+ */
 function buildRecommendations(userData, repos) {
     // Extract languages from repos (weighted by frequency)
     const languageCounts = {};
@@ -260,6 +273,7 @@ function buildRecommendations(userData, repos) {
     };
 }
 
+/** Shows an error message in the UI. */
 function showError(message) {
     if (errorText) errorText.textContent = message;
     if (errorMessage) {
@@ -268,10 +282,15 @@ function showError(message) {
     }
 }
 
+/** Hides the error message. */
 function hideError() {
     if (errorMessage) errorMessage.classList.add('hidden');
 }
 
+/**
+ * Renders recommendation results to the DOM.
+ * @param {Object} data - Recommendation data from buildRecommendations
+ */
 function displayResults(data) {
     console.log("result", JSON.stringify(data));
 
@@ -291,8 +310,10 @@ function displayResults(data) {
     if (houseBadge && data.house) {
         houseBadge.className = `inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold border ${data.house.color}`;
         houseBadge.title = data.house.desc;
-        document.getElementById('house-icon').textContent = data.house.icon;
-        document.getElementById('house-name').textContent = data.house.name;
+        const houseIcon = document.getElementById('house-icon');
+        const houseName = document.getElementById('house-name');
+        if (houseIcon) houseIcon.textContent = data.house.icon;
+        if (houseName) houseName.textContent = data.house.name;
         houseBadge.classList.remove('hidden');
     } else if (houseBadge) {
         houseBadge.classList.add('hidden');
@@ -414,6 +435,7 @@ function displayResults(data) {
     if (formCard) formCard.classList.add('hidden');
 }
 
+/** Escapes HTML special characters to prevent XSS. */
 function escapeHtml(str) {
     if (str == null) return '';
     return String(str)
@@ -446,6 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create profile button handler
 });
 
+/** Attaches click handler to create-profile button. */
 function setupCreateProfileButton(data) {
     const createProfileBtn = document.getElementById('create-profile-btn');
     if (!createProfileBtn) return;
@@ -459,6 +482,7 @@ function setupCreateProfileButton(data) {
     });
 }
 
+/** Builds GitHub issue URL with pre-filled profile data. */
 function buildProfileIssueUrl(data) {
     const githubStats = data.github_stats;
     const baseUrl = 'https://github.com/OWASP-BLT/BLT-OSSH/issues/new';
